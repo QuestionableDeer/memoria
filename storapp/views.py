@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -18,3 +19,7 @@ def registration_page(request):
 
     context = {'form': form}
     return render(request, 'registration.html', context)
+
+@login_required
+def profile(request):
+    return render(request, 'profile.html')
