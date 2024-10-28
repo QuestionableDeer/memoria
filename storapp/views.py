@@ -4,8 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from storapp.forms import CodeUploadForm
-from storapp.models import CodeMemory
+from storapp.forms import CodeUploadForm, ImageUploadForm
+from storapp.models import CodeMemory, ImageMemory
 
 # Create your views here.
 def index(request):
@@ -51,3 +51,28 @@ def upload_code(request):
     }
 
     return render(request, 'storapp/upload_code.html', context)
+
+@login_required
+def upload_image(request):
+    if request.method == 'POST':
+        # create form instance and populate it with data from request (binding)
+        form = ImageUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            imageMemory = ImageMemory()
+            imageMemory.name = form.cleaned_data['name']
+            imageMemory.img = form.cleaned_data['img']
+            imageMemory.owner = request.user
+            imageMemory.is_paid = False
+
+            imageMemory.save()
+
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = ImageUploadForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'storapp/upload_image.html', context)
