@@ -2,11 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 
-from storapp.forms import CodeUploadForm, ImageUploadForm
+from storapp.forms import CodeUnlockForm, CodeUploadForm, ImageUploadForm, ImageUnlockForm
 from storapp.models import CodeMemory, ImageMemory
 
 # Create your views here.
@@ -24,6 +24,50 @@ def registration_page(request):
 
     context = {'form': form}
     return render(request, 'registration.html', context)
+
+@login_required
+def unlock_code(request, pk):
+    code_instance = get_object_or_404(CodeMemory, pk=pk)
+
+    if request.method == 'POST':
+        form = CodeUnlockForm(request.POST)
+
+        if form.is_valid():
+            code_instance.is_paid = form.cleaned_data['payment_made']
+            code_instance.save()
+
+            return HttpResponseRedirect(reverse('code-detail', kwargs={'pk':pk}))
+    else:
+        form = CodeUnlockForm()
+
+    context = {
+        'form': form,
+        'code_instance': code_instance,
+    }
+
+    return render(request, 'storapp/unlock_code.html', context)
+
+@login_required
+def unlock_image(request, pk):
+    image_instance = get_object_or_404(ImageMemory, pk=pk)
+
+    if request.method == 'POST':
+        form = ImageUnlockForm(request.POST)
+
+        if form.is_valid():
+            image_instance.is_paid = form.cleaned_data['payment_made']
+            image_instance.save()
+
+            return HttpResponseRedirect(reverse('image-detail', kwargs={'pk':pk}))
+    else:
+        form = ImageUnlockForm()
+
+    context = {
+        'form': form,
+        'image_instance': image_instance,
+    }
+
+    return render(request, 'storapp/unlock_image.html', context)
 
 @login_required
 def profile(request):

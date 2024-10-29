@@ -9,7 +9,7 @@
 		<h2>Recorded Codes</h2>
 		{% for code in user.codememory_set.all %}
 			<p>
-				<a href="{% url 'code-detail' code.id %}">{{ code.name }}</a> ({{ code.upload_date }}) {% if code.is_paid %}{{ code.code }}{% else %}<a href="">Unlock (${{ code.unlock_price }})</a>{% endif %}
+				<a href="{% url 'code-detail' code.id %}">{{ code.name }}</a> ({{ code.upload_date }}) {% if code.is_paid %}{{ code.code }}{% else %}<a href="{% url 'unlock-code' code.id %}">Unlock (${{ code.unlock_price }})</a>{% endif %}
 			</p>
 		{% endfor %}
 	{% endif %}
@@ -17,7 +17,7 @@
 		<h2>Recorded Images</h2>
 		{% for image in user.imagememory_set.all %}
 			<p>
-				<a href="{% url 'image-detail' image.id %}">{{ image.name }}</a> ({{ image.upload_date }}) {% if image.is_paid %}<img src="{{ image.img.url }}" alt="{{ image.name }}" />{% else %}<a href="">Unlock (${{ image.unlock_price }})</a>{% endif %}
+				<a href="{% url 'image-detail' image.id %}">{{ image.name }}</a> ({{ image.upload_date }}) {% if image.is_paid %}<img src="{{ image.img.url }}" alt="{{ image.name }}" />{% else %}<a href="{% url 'unlock-image' image.id %}">Unlock (${{ image.unlock_price }})</a>{% endif %}
 			</p>
 		{% endfor %}
 	{% endif %}
