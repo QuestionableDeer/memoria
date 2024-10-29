@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import generic
 
 from storapp.forms import CodeUploadForm, ImageUploadForm
 from storapp.models import CodeMemory, ImageMemory
@@ -38,6 +40,7 @@ def upload_code(request):
             codeMemory.name = form.cleaned_data['name']
             codeMemory.code = form.cleaned_data['code']
             codeMemory.owner = request.user
+            codeMemory.unlock_price = form.cleaned_data['unlock_price']
             codeMemory.is_paid = False
 
             codeMemory.save()
@@ -63,6 +66,7 @@ def upload_image(request):
             imageMemory.name = form.cleaned_data['name']
             imageMemory.img = form.cleaned_data['img']
             imageMemory.owner = request.user
+            imageMemory.unlock_price = form.cleaned_data['unlock_price']
             imageMemory.is_paid = False
 
             imageMemory.save()
@@ -76,3 +80,9 @@ def upload_image(request):
     }
 
     return render(request, 'storapp/upload_image.html', context)
+
+class CodeDetailView(LoginRequiredMixin, generic.DetailView):
+    model = CodeMemory
+
+class ImageDetailView(LoginRequiredMixin, generic.DetailView):
+    model = ImageMemory

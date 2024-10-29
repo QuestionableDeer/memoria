@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+	<p><strong>Name:</strong> {{ imagememory.name }}</p>
+	<p><strong>Upload Date:</strong> {{ imagememory.upload_date }}</p>
+	{% if code.is_paid %}
+		<p><img src="{{ imagememory.img.url }}" alt="{{ imagememory.name }}" /></p>
+	{% else %}
+		<p><a href="">Unlock (${{ imagememory.unlock_price }})</a>
+	{% endif %}
+{% endblock %}
