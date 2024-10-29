@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+	<p><strong>Name:</strong> {{ codememory.name }}</p>
+	<p><strong>Upload Date:</strong> {{ codememory.upload_date }}</p>
+	{% if code.is_paid %}
+		<p><strong>Code:</strong> {{ codememory.code }}</p>
+	{% else %}
+		<p><a href="">Unlock (${{ codememory.unlock_price }})</a>
+	{% endif %}
+{% endblock %}

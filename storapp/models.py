@@ -2,12 +2,15 @@ from django.contrib.auth import models as auth_models
 from django.db import models
 from django.urls import reverse
 
+from decimal import Decimal
+
 # Create your models here.
 class CodeMemory(models.Model):
     name = models.CharField(max_length=256)
     code = models.CharField(max_length=64)
     owner = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
     upload_date = models.DateTimeField(auto_now_add=True)
+    unlock_price = models.DecimalField(max_digits=7, decimal_places=2, default=Decimal(0.0))
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
@@ -26,6 +29,7 @@ class ImageMemory(models.Model):
     img = models.ImageField()
     owner = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
     upload_date = models.DateTimeField(auto_now_add=True)
+    unlock_price = models.DecimalField(max_digits=7, decimal_places=2, default=Decimal(0.0))
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
